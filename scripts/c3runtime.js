@@ -4305,6 +4305,40 @@ return o?o["rms"]:0},SampleRate(){return this._sampleRate},CurrentTime(){if(self
 }
 
 {
+'use strict';{const C3=self.C3;C3.Plugins.advert=class MobileAdvertPlugin extends C3.SDKPluginBase{constructor(opts){super(opts)}Release(){super.Release()}}}{const C3=self.C3;C3.Plugins.advert.Type=class MobileAdvertType extends C3.SDKTypeBase{constructor(objectClass){super(objectClass)}Release(){super.Release()}OnCreate(){}}}
+{const C3=self.C3;const BUSY="busy";const SET="set";const DOM_COMPONENT_ID="advert";function Log(str){console.log("[C3 advert]",str)}C3.Plugins.advert.Instance=class MobileAdvertInstance extends C3.SDKInstanceBase{constructor(inst,properties){super(inst,DOM_COMPONENT_ID);this.testMode=!!properties[0];this.keyState=null;this.bannerState=null;this.interstitialState=null;this.videoState=null;this.rewardedState=null;this.rewardedInterstitialState=null;this.consentStatus=null;this.idfaStatus="not-determined";
+this.isInEeaOrUnknown=true;this.rewardType="";this.rewardValue=0;this.rewardInterstitialType="";this.rewardInterstitialValue=0;const rt=this._runtime.Dispatcher();this._disposables=new C3.CompositeDisposable(C3.Disposable.From(rt,"beforeruntimestart",()=>this._OnBeforeRuntimeStart(properties)),C3.Disposable.From(rt,"layoutchange",()=>this._OnLayoutChange()))}async _OnBeforeRuntimeStart(properties){const androidID=properties[1];const iOSID=properties[2];const pubID=properties[5];const showAdFree=properties[6];
+const privacyPolicy=properties[7];const showConsent=properties[8];const debugLocation=properties[3];const showOnStartUp=properties[4];if(this._runtime.IsCordova()){const appID=this._runtime.IsiOSCordova()?iOSID:androidID;if(appID){await this._StatusUpdate(debugLocation);this._SetPublicKey(appID,pubID,privacyPolicy,showAdFree,showConsent,debugLocation,showOnStartUp)}}else{const attributes={};attributes["data-ad-client"]=`ca-${pubID}`;attributes["data-ad-frequency-hint"]="30s";attributes["async"]="";
+if(self["origin"]==="https://preview.construct.net")attributes["data-adbreak-test"]="on";else if(this.testMode)attributes["data-adbreak-test"]="on";await this.PostToDOMAsync("AddScript",["https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js",attributes]);await this._StatusUpdate(debugLocation);this._SetPublicKey("mock-id",pubID,privacyPolicy,showAdFree,showConsent,debugLocation,showOnStartUp)}}_OnLayoutChange(){if(this.keyState===SET)this.TriggerAsync(C3.Plugins.advert.Cnds.OnConfigurationComplete)}async _StatusUpdate(debugLocation){try{debugLocation=
+["DISABLED","EEA","NOT_EEA"][debugLocation];const result=await this.PostToDOMAsync("StatusUpdate",[this.testMode,debugLocation]);const [consentStatus,idfaStatus,inEEA]=result.split("&&");this.consentStatus=consentStatus;this.idfaStatus=idfaStatus;this.isInEeaOrUnknown=inEEA!=="false"}catch(e){this.SetError("status failed to update",e)}}async _SetPublicKey(appID,pubID,privacyPolicy,showAdFree,showConsent,debugLocation,showOnStartUp){if(this.keyState!==null)return;this.keyState=BUSY;showConsent=["eu",
+"always","never"][showConsent];debugLocation=["DISABLED","EEA","NOT_EEA"][debugLocation];try{const result=await this.PostToDOMAsync("Configure",[appID.trim(),pubID.trim(),privacyPolicy.trim(),showAdFree,showConsent,this.testMode,debugLocation,showOnStartUp]);const [consentStatus,idfaStatus,inEEA]=result.split("&&");this.isInEeaOrUnknown=inEEA!=="false";this.keyState=SET;this.consentStatus=consentStatus;this.idfaStatus=idfaStatus;this.SetParameters("configuration complete");await this.TriggerAsync(C3.Plugins.advert.Cnds.OnConfigurationComplete)}catch(e){this.keyState=
+null;this.SetError("configuration failed",e);await this.TriggerAsync(C3.Plugins.advert.Cnds.OnConfigurationFailed)}}PostToDOMAsync(name,data=[]){return super.PostToDOMAsync(name,data)}SetError(name,err){const message=typeof err==="string"?err:err.message;this.SetParameters(name,message)}SetParameters(name,err="",type="",amount=0,adType=""){Log(`Event (${name} Error (${err}) Type (${type}) Amount (${amount}))`);this.errorMessage=err||"";switch(adType){case "rewarded":{this.rewardType=type||"";this.rewardValue=
+amount||0;break}case "rewarded interstitial":{this.rewardInterstitialType=type||"";this.rewardInterstitialValue=amount||0;break}default:{this.rewardType="";this.rewardValue=0;this.rewardInterstitialType="";this.rewardInterstitialValue=0}}}IsOnMobile(){return!!self["cordova"]}IsOnWeb(){return!self["cordova"]}}}
+{const C3=self.C3;const SHOWN="shown";const LOADED="loaded";const SET="set";C3.Plugins.advert.Cnds={OnBannerReady(){return true},OnVideoReady(){return true},OnRewardedReady(){return true},OnInterstitialReady(){return true},OnRewardedInterstitialReady(){return true},OnBannerFailedToLoad(){return true},OnVideoFailedToLoad(){return true},OnRewardedFailedToLoad(){return true},OnInterstitialFailedToLoad(){return true},OnRewardedInterstitialFailedToLoad(){return true},OnBannerShown(){return true},OnVideoComplete(){return true},
+OnRewardedComplete(){return true},OnInterstitialComplete(){return true},OnRewardedInterstitialComplete(){return true},OnBannerHidden(){return true},OnVideoCancelled(){return true},OnRewardedCancelled(){return true},OnInterstitialCancelled(){return true},OnRewardedInterstitialCancelled(){return true},OnConfigurationFailed(){return true},OnConfigurationComplete(){return true},OnUserPersonalizationUpdated(){return true},IsShowingBanner(){return this.bannerState===SHOWN},IsShowingVideo(){return this.videoState===
+SHOWN},IsShowingRewarded(){return this.rewardedState===SHOWN},IsShowingInterstitial(){return this.interstitialState===SHOWN},IsShowingRewardedInterstitial(){return this.rewardedInterstitialState===SHOWN},IsInEeaOrUnknown(){return this.isInEeaOrUnknown},IsBannerLoaded(){return this.bannerState===LOADED},IsVideoLoaded(){return this.videoState===LOADED},IsRewardedLoaded(){return this.rewardedState===LOADED},IsInterstitialLoaded(){return this.interstitialState===LOADED},IsRewardedInterstitialLoaded(){return this.rewardedInterstitialState===
+LOADED},IsConfigured(){return this.keyState===SET},OnIDFARequestComplete(){return true}}}
+{const C3=self.C3;const BUSY="busy";const SHOWN="shown";const LOADED="loaded";const SET="set";const BANNER_SIZES=["portrait","landscape","standard","large","medium","full","leaderboard"];const BANNER_POSITIONS=["bottom","top"];async function _HandleRewardedException(e,fromCreate,onFailToLoad,onCancelled){if(this.IsOnWeb()&&fromCreate&&e!=="closed with no reward")await onFailToLoad();else await onCancelled()}async function _HandleInterstitialException(fromCreate,onFailToLoad,onCancelled){if(this.IsOnWeb()&&
+fromCreate)await onFailToLoad();else await onCancelled()}C3.Plugins.advert.Acts={async CreateBanner(id,size,show,position,reload){if(reload===0)this.bannerState=null;if(this.bannerState!=null)return;this.bannerState=BUSY;try{await this.PostToDOMAsync("CreateBannerAdvert",[id.trim(),BANNER_SIZES[size],this.testMode,BANNER_POSITIONS[position],reload===0]);this.bannerState=LOADED;this.SetParameters("banner created");await this.TriggerAsync(C3.Plugins.advert.Cnds.OnBannerReady);if(show==0)C3.Plugins.advert.Acts.ShowBanner.call(this)}catch(e){this.bannerState=
+null;this.SetError("failed to create banner",e);await this.TriggerAsync(C3.Plugins.advert.Cnds.OnBannerFailedToLoad)}},async ShowBanner(){if(this.bannerState!=LOADED)return;this.bannerState=BUSY;try{await this.PostToDOMAsync("ShowBannerAdvert");this.bannerState=SHOWN;this.SetParameters("banner shown");await this.TriggerAsync(C3.Plugins.advert.Cnds.OnBannerShown)}catch(e){this.bannerState=null;this.SetError("failed to show banner",e)}},async HideBanner(){if(this.bannerState!=SHOWN)return;this.bannerState=
+BUSY;try{await this.PostToDOMAsync("HideBannerAdvert");this.bannerState=null;this.SetParameters("banner hidden");await this.TriggerAsync(C3.Plugins.advert.Cnds.OnBannerHidden)}catch(e){this.bannerState=null;this.SetError("failed to hide banner",e)}},async CreateInterstitial(id,show){if(this.interstitialState!=null)return;this.interstitialState=BUSY;try{await this.PostToDOMAsync("CreateInterstitialAdvert",[id.trim(),this.testMode]);this.interstitialState=LOADED;this.SetParameters("interstitial created");
+await this.TriggerAsync(C3.Plugins.advert.Cnds.OnInterstitialReady);if(show==0)C3.Plugins.advert.Acts.ShowInterstitial.call(this,true)}catch(e){this.interstitialState=null;this.SetError("failed to create interstitial",e);await this.TriggerAsync(C3.Plugins.advert.Cnds.OnInterstitialFailedToLoad)}},async ShowInterstitial(fromCreate=false){if(this.interstitialState!=LOADED)return;this.interstitialState=SHOWN;try{await this.PostToDOMAsync("ShowInterstitialAdvert");this.interstitialState=null;this.SetParameters("interstitial completed");
+await this.TriggerAsync(C3.Plugins.advert.Cnds.OnInterstitialComplete)}catch(e){this.interstitialState=null;await _HandleInterstitialException.call(this,fromCreate,async()=>{this.SetError("failed to create interstitial",e);await this.TriggerAsync(C3.Plugins.advert.Cnds.OnInterstitialFailedToLoad)},async()=>{this.SetError("interstitial cancelled",e);await this.TriggerAsync(C3.Plugins.advert.Cnds.OnInterstitialCancelled)})}},async CreateVideo(id,show){if(this.videoState!=null||this.rewardedState!=null)return;
+this.videoState=BUSY;try{await this.PostToDOMAsync("CreateVideoAdvert",[id.trim(),this.testMode]);this.videoState=LOADED;this.SetParameters("video created");await this.TriggerAsync(C3.Plugins.advert.Cnds.OnVideoReady);if(show==0)C3.Plugins.advert.Acts.ShowVideo.call(this)}catch(e){this.videoState=null;this.SetError("failed to create video",e);await this.TriggerAsync(C3.Plugins.advert.Cnds.OnVideoFailedToLoad)}},async ShowVideo(){if(this.videoState!=LOADED)return;this.videoState=SHOWN;try{const result=
+await this.PostToDOMAsync("ShowVideoAdvert");const [type,value]=JSON.parse(result);this.videoState=null;this.SetParameters("video completed",null,type,value);await this.TriggerAsync(C3.Plugins.advert.Cnds.OnVideoComplete)}catch(e){this.videoState=null;this.SetError("video cancelled",e);await this.TriggerAsync(C3.Plugins.advert.Cnds.OnVideoCancelled)}},async CreateRewarded(id,show){if(this.rewardedState!=null||this.videoState!=null)return;this.rewardedState=BUSY;try{await this.PostToDOMAsync("CreateRewardedAdvert",
+[id.trim(),this.testMode]);this.rewardedState=LOADED;this.SetParameters("rewarded created");await this.TriggerAsync(C3.Plugins.advert.Cnds.OnRewardedReady);if(show==0)C3.Plugins.advert.Acts.ShowRewarded.call(this,true)}catch(e){this.rewardedState=null;this.SetError("failed to create rewarded",e);await this.TriggerAsync(C3.Plugins.advert.Cnds.OnRewardedFailedToLoad)}},async ShowRewarded(fromCreate=false){if(this.rewardedState!=LOADED)return;this.rewardedState=SHOWN;try{const result=await this.PostToDOMAsync("ShowRewardedAdvert");
+const [type,value]=JSON.parse(result);this.rewardedState=null;this.SetParameters("rewarded completed",null,type,value,"rewarded");await this.TriggerAsync(C3.Plugins.advert.Cnds.OnRewardedComplete)}catch(e){this.rewardedState=null;await _HandleRewardedException.call(this,e,fromCreate,async()=>{this.SetError("failed to create rewarded",e);await this.TriggerAsync(C3.Plugins.advert.Cnds.OnRewardedFailedToLoad)},async()=>{this.SetError("rewarded cancelled",e);await this.TriggerAsync(C3.Plugins.advert.Cnds.OnRewardedCancelled)})}},
+async CreateRewardedInterstitial(id,show){if(this.rewardedInterstitialState!=null)return;this.rewardedInterstitialState=BUSY;try{await this.PostToDOMAsync("CreateRewardedInterstitialAdvert",[id.trim(),this.testMode]);this.rewardedInterstitialState=LOADED;this.SetParameters("rewarded interstitial created");await this.TriggerAsync(C3.Plugins.advert.Cnds.OnRewardedInterstitialReady);if(show==0)C3.Plugins.advert.Acts.ShowRewardedInterstitial.call(this,true)}catch(e){this.rewardedInterstitialState=null;
+this.SetError("failed to create rewarded interstitial",e);await this.TriggerAsync(C3.Plugins.advert.Cnds.OnRewardedInterstitialFailedToLoad)}},async ShowRewardedInterstitial(fromCreate=false){if(this.rewardedInterstitialState!=LOADED)return;this.rewardedInterstitialState=SHOWN;try{const result=await this.PostToDOMAsync("ShowRewardedInterstitialAdvert");const [type,value]=JSON.parse(result);this.rewardedInterstitialState=null;this.SetParameters("rewarded interstitial completed",null,type,value,"rewarded interstitial");
+await this.TriggerAsync(C3.Plugins.advert.Cnds.OnRewardedInterstitialComplete)}catch(e){this.rewardedInterstitialState=null;await _HandleRewardedException.call(this,e,fromCreate,async()=>{this.SetError("failed to create rewarded interstitial",e);await this.TriggerAsync(C3.Plugins.advert.Cnds.OnRewardedInterstitialFailedToLoad)},async()=>{this.SetError("rewarded interstitial cancelled",e);await this.TriggerAsync(C3.Plugins.advert.Cnds.OnRewardedInterstitialCancelled)})}},SetPublicKey(appID,pubID,privacyPolicy,
+showAdFree,showConsent,debugLocation){showAdFree=[true,false][showAdFree];this._SetPublicKey(appID,pubID,privacyPolicy,showAdFree,showConsent,debugLocation)},async ShowConsentDialog(){if(this.keyState!==SET)return;this.keyState=BUSY;try{const lastIdfaStatus=this.idfaStatus;const result=await this.PostToDOMAsync("RequestConsent");const [consentStatus,idfaStatus,_]=result.split("&&");this.keyState=SET;this.consentStatus=consentStatus;this.idfaStatus=idfaStatus;if(lastIdfaStatus!==this.idfaStatus)this.Trigger(C3.Plugins.advert.Cnds.OnIDFARequestComplete);
+this.SetParameters("configuration complete");await this.TriggerAsync(C3.Plugins.advert.Cnds.OnConfigurationComplete)}catch(e){this.keyState=SET;this.SetError("configuration failed",e);await this.TriggerAsync(C3.Plugins.advert.Cnds.OnConfigurationFailed)}},async SetUserPersonalization(newStatus){},async SetMaxAdContentRating(label){if(this.keyState!==SET)return;try{const param=["G","PG","T","MA"][label];await this.PostToDOMAsync("SetMaxAdContentRating",[param])}catch(e){}},async TagForChildDirectedTreatment(option){if(this.keyState!==
+SET)return;try{await this.PostToDOMAsync("TagForChildDirectedTreatment",[option?1:0])}catch(e){}},async TagForUnderAgeOfConsent(option){if(this.keyState!==SET)return;try{await this.PostToDOMAsync("TagForUnderAgeOfConsent",[option?1:0])}catch(e){}},async RequestIDFA(){try{this.idfaStatus=await this.PostToDOMAsync("RequestIDFA")}catch(err){console.warn("Error requesting IDFA: ",err);this.idfaStatus="error"}this.Trigger(C3.Plugins.advert.Cnds.OnIDFARequestComplete)}}}
+{const C3=self.C3;C3.Plugins.advert.Exps={ErrorMessage(){return this.errorMessage||""},RewardType(){return this.rewardType||""},RewardValue(){return this.rewardValue||0},RewardInterstitialType(){return this.rewardInterstitialType||""},RewardInterstitialValue(){return this.rewardInterstitialValue||0},ConsentStatus(){return this.consentStatus||"UNKNOWN"},IDFAStatus(){return this.idfaStatus}}};
+
+}
+
+{
 'use strict';{const C3=self.C3;C3.Behaviors.bound=class BoundBehavior extends C3.SDKBehaviorBase{constructor(opts){super(opts)}Release(){super.Release()}}}{const C3=self.C3;C3.Behaviors.bound.Type=class BoundType extends C3.SDKBehaviorTypeBase{constructor(behaviorType){super(behaviorType)}Release(){super.Release()}OnCreate(){}}}
 {const C3=self.C3;const MODE=0;C3.Behaviors.bound.Instance=class BoundInstance extends C3.SDKBehaviorInstanceBase{constructor(behInst,properties){super(behInst);this._mode=0;if(properties)this._mode=properties[MODE];this._StartTicking2()}Release(){super.Release()}SaveToJson(){return{"m":this._mode}}LoadFromJson(o){this._mode=o["m"]}Tick2(){const wi=this._inst.GetWorldInfo();const bbox=wi.GetBoundingBox();const layout=wi.GetLayout();let isChanged=false;if(this._mode===0){if(wi.GetX()<0){wi.SetX(0);
 isChanged=true}if(wi.GetY()<0){wi.SetY(0);isChanged=true}if(wi.GetX()>layout.GetWidth()){wi.SetX(layout.GetWidth());isChanged=true}if(wi.GetY()>layout.GetHeight()){wi.SetY(layout.GetHeight());isChanged=true}}else{if(bbox.getLeft()<0){wi.OffsetX(-bbox.getLeft());isChanged=true}if(bbox.getTop()<0){wi.OffsetY(-bbox.getTop());isChanged=true}if(bbox.getRight()>layout.GetWidth()){wi.OffsetX(-(bbox.getRight()-layout.GetWidth()));isChanged=true}if(bbox.getBottom()>layout.GetHeight()){wi.OffsetY(-(bbox.getBottom()-
@@ -4422,6 +4456,7 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Button,
 		C3.Behaviors.Fade,
 		C3.Plugins.Audio,
+		C3.Plugins.advert,
 		C3.Plugins.System.Cnds.OnLayoutStart,
 		C3.Plugins.Audio.Acts.Play,
 		C3.Plugins.Sprite.Acts.SetPos,
@@ -4470,7 +4505,8 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.System.Acts.AddVar,
 		C3.Plugins.Audio.Acts.StopAll,
 		C3.Behaviors.Fade.Acts.StartFade,
-		C3.Plugins.System.Acts.NextPrevLayout
+		C3.Plugins.System.Acts.NextPrevLayout,
+		C3.Plugins.advert.Acts.CreateInterstitial
 	];
 };
 self.C3_JsPropNameTable = [
@@ -4519,6 +4555,8 @@ self.C3_JsPropNameTable = [
 	{astronautafrente: 0},
 	{ovnimenu: 0},
 	{ovnimenu2: 0},
+	{barravida2: 0},
+	{AnuncioEnMóvil: 0},
 	{MUERTE: 0},
 	{TIEMPO: 0},
 	{musica: 0}
@@ -4560,7 +4598,9 @@ self.InstanceType = {
 	fondomenu: class extends self.ISpriteInstance {},
 	astronautafrente: class extends self.ISpriteInstance {},
 	ovnimenu: class extends self.ISpriteInstance {},
-	ovnimenu2: class extends self.ISpriteInstance {}
+	ovnimenu2: class extends self.ISpriteInstance {},
+	barravida2: class extends self.ISpriteInstance {},
+	AnuncioEnMóvil: class extends self.IInstance {}
 }
 }
 
@@ -4692,6 +4732,10 @@ self.C3_ExpressionFuncs = [
 			const f3 = p._GetNode(3).GetBoundMethod();
 			return () => C3.toDegrees(C3.angleTo(n0.ExpObject(), n1.ExpObject(), f2(), f3()));
 		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => (500 * f0());
+		},
 		() => "Game",
 		() => 5,
 		() => 2,
@@ -4733,7 +4777,9 @@ self.C3_ExpressionFuncs = [
 			const n0 = p._GetNode(0);
 			return () => n0.ExpBehavior();
 		},
-		() => "musica"
+		() => "musica",
+		() => 1.5,
+		() => "ca-app-pub-4646893811900834/1485633529"
 ];
 
 
