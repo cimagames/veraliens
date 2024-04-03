@@ -4504,9 +4504,10 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Audio.Acts.SetSilent,
 		C3.Plugins.System.Acts.AddVar,
 		C3.Plugins.Audio.Acts.StopAll,
+		C3.Plugins.advert.Acts.ShowInterstitial,
+		C3.Plugins.advert.Acts.CreateInterstitial,
 		C3.Behaviors.Fade.Acts.StartFade,
-		C3.Plugins.System.Acts.NextPrevLayout,
-		C3.Plugins.advert.Acts.CreateInterstitial
+		C3.Plugins.System.Acts.NextPrevLayout
 	];
 };
 self.C3_JsPropNameTable = [
@@ -4778,8 +4779,8 @@ self.C3_ExpressionFuncs = [
 			return () => n0.ExpBehavior();
 		},
 		() => "musica",
-		() => 1.5,
-		() => "ca-app-pub-4646893811900834/1485633529"
+		() => "ca-app-pub-4646893811900834/1485633529",
+		() => 1.5
 ];
 
 
