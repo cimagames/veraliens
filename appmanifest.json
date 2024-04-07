@@ -1,7 +1,7 @@
 {
-	"name": "AttackAlienMoon",
-	"short_name": "AttackAlienMoon",
-	"description": "",
+	"name": "cubase",
+	"short_name": "cubase",
+	"description": "cubase2024",
 	"start_url": "index.html",
 	"display": "fullscreen",
 	"orientation": "any",
