@@ -4230,6 +4230,173 @@ return o?o["rms"]:0},SampleRate(){return this._sampleRate},CurrentTime(){if(self
 }
 
 {
+"use strict";
+
+{
+  C3.Plugins.GM_SDK = class SingleGlobalPlugin extends C3.SDKPluginBase {
+    constructor(opts) {
+      super(opts);
+    }
+
+    Release() {
+      super.Release();
+    }
+  };
+}
+}
+
+{
+"use strict";
+
+{
+	C3.Plugins.GM_SDK.Type = class SingleGlobalType extends C3.SDKTypeBase
+	{
+		constructor(objectClass)
+		{
+			super(objectClass);
+		}
+		
+		Release()
+		{
+			super.Release();
+		}
+		
+		OnCreate()
+		{	
+		}
+	};
+}
+}
+
+{
+"use strict";
+
+{
+  C3.Plugins.GM_SDK.Instance = class SingleGlobalInstance extends C3.SDKInstanceBase {
+    constructor(inst, properties) {
+      super(inst);
+
+      // Initialise object properties
+      this._gameID = "";
+      this._sdkReady = false;
+      this._adPlaying = false;
+      this._adViewed = false;
+      this._preloadedAd = false;
+      this._available_adtypes = ["interstitial"];
+
+      if (properties) {
+        this._gameID = properties[0];
+      }
+
+      window.SDK_OPTIONS = {
+        gameId: this._gameID,
+        onEvent: event => {
+          switch (event.name) {
+            case "SDK_GAME_START":
+              // advertisement done, resume game logic and unmute audio
+              this._adPlaying = false;
+              break;
+            case "SDK_GAME_PAUSE":
+              // pause game logic / mute audio
+              this._adPlaying = true;
+              break;
+            case "COMPLETE":
+              // this event is triggered when the user watched an entire ad
+              this._adViewed = true;
+              setTimeout(() => {
+                this._adViewed = false;
+              }, 5000);
+              break;
+            case "SDK_READY":
+              this._sdkReady = true;
+              break;
+          }
+        }
+      };
+
+      (function(d, s, id) {
+        var js,
+          fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "//api.gamemonetize.com/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      })(document, "script", "gamemonetize-sdk");
+    }
+
+    Release() {
+      super.Release();
+    }
+
+    SaveToJson() {
+      return {
+        // data to be saved for savegames
+      };
+    }
+
+    LoadFromJson(o) {
+      // load state for savegames
+    }
+ 
+    ShowAd() {
+      var sdk = window["sdk"];
+      if (sdk !== "undefined" && sdk.showBanner !== "undefined") {
+        sdk.showBanner();
+      }
+    }
+  };
+}
+
+}
+
+{
+"use strict";
+
+{
+  C3.Plugins.GM_SDK.Cnds = {
+    ResumeGame() {
+      return !this._adPlaying;
+    },
+    PauseGame() {
+      return this._adPlaying;
+    },
+    PreloadedAd() {
+      return this._preloadedAd;
+    },
+    AdViewed() {
+      return this._adViewed;
+    }
+  };
+}
+
+}
+
+{
+"use strict";
+
+{
+  C3.Plugins.GM_SDK.Acts = {
+    ShowAd() {
+      this.ShowAd();
+    }
+  };
+}
+
+}
+
+{
+"use strict";
+
+{
+	C3.Plugins.GM_SDK.Exps =
+	{
+		
+	};
+}
+}
+
+{
 'use strict';{const C3=self.C3;C3.Behaviors.Bullet=class BulletBehavior extends C3.SDKBehaviorBase{constructor(opts){super(opts)}Release(){super.Release()}}}{const C3=self.C3;C3.Behaviors.Bullet.Type=class BulletType extends C3.SDKBehaviorTypeBase{constructor(behaviorType){super(behaviorType)}Release(){super.Release()}OnCreate(){}}}
 {const C3=self.C3;const C3X=self.C3X;const IBehaviorInstance=self.IBehaviorInstance;const SPEED=0;const ACCELERATION=1;const GRAVITY=2;const BOUNCE_OFF_SOLIDS=3;const SET_ANGLE=4;const STEPPING=5;const ENABLE=6;C3.Behaviors.Bullet.Instance=class BulletInstance extends C3.SDKBehaviorInstanceBase{constructor(behInst,properties){super(behInst);const wi=this.GetWorldInfo();this._speed=0;this._acc=0;this._g=0;this._bounceOffSolid=false;this._setAngle=false;this._isStepping=false;this._isEnabled=true;this._dx=
 0;this._dy=0;this._lastX=wi.GetX();this._lastY=wi.GetY();this._lastKnownAngle=wi.GetAngle();this._travelled=0;this._stepSize=Math.min(Math.abs(wi.GetWidth()),Math.abs(wi.GetHeight())/2);this._stopStepping=false;if(properties){this._speed=properties[SPEED];this._acc=properties[ACCELERATION];this._g=properties[GRAVITY];this._bounceOffSolid=!!properties[BOUNCE_OFF_SOLIDS];this._setAngle=!!properties[SET_ANGLE];this._isStepping=!!properties[STEPPING];this._isEnabled=!!properties[ENABLE]}const a=wi.GetAngle();
@@ -4423,12 +4590,15 @@ self.C3_GetObjectRefTable = function () {
 		C3.Behaviors.solid,
 		C3.Behaviors.Platform,
 		C3.Behaviors.scrollto,
+		C3.Plugins.GM_SDK,
 		C3.Plugins.Touch.Cnds.OnTapGestureObject,
 		C3.Behaviors.Fade.Acts.StartFade,
 		C3.Plugins.Sprite.Acts.SetScale,
 		C3.Plugins.Sprite.Acts.SetPos,
 		C3.Plugins.System.Acts.Wait,
 		C3.Plugins.System.Acts.NextPrevLayout,
+		C3.Plugins.GM_SDK.Cnds.ResumeGame,
+		C3.Plugins.GM_SDK.Acts.ShowAd,
 		C3.Plugins.System.Cnds.OnLayoutStart,
 		C3.Plugins.Sprite.Cnds.IsOutsideLayout,
 		C3.Plugins.Audio.Acts.Play,
@@ -4471,7 +4641,8 @@ self.C3_JsPropNameTable = [
 	{Sprite8: 0},
 	{Sprite9: 0},
 	{Sprite10: 0},
-	{Sprite11: 0}
+	{Sprite11: 0},
+	{GameMonetizeSDK: 0}
 ];
 
 self.InstanceType = {
@@ -4500,7 +4671,8 @@ self.InstanceType = {
 	Sprite8: class extends self.ISpriteInstance {},
 	Sprite9: class extends self.ISpriteInstance {},
 	Sprite10: class extends self.ISpriteInstance {},
-	Sprite11: class extends self.ISpriteInstance {}
+	Sprite11: class extends self.ISpriteInstance {},
+	GameMonetizeSDK: class extends self.IInstance {}
 }
 }
 
