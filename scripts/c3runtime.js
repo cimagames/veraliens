@@ -4637,8 +4637,9 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Audio.Acts.SetSilent,
 		C3.Plugins.System.Acts.AddVar,
 		C3.Plugins.Audio.Acts.StopAll,
-		C3.Plugins.GM_SDK.Acts.ShowAd,
 		C3.Plugins.GM_SDK.Cnds.PauseGame,
+		C3.Plugins.System.Acts.SetTimescale,
+		C3.Plugins.GM_SDK.Acts.ShowAd,
 		C3.Plugins.GM_SDK.Cnds.ResumeGame,
 		C3.Behaviors.Fade.Acts.StartFade,
 		C3.Plugins.System.Acts.NextPrevLayout,
@@ -4694,9 +4695,9 @@ self.C3_JsPropNameTable = [
 	{barravida2: 0},
 	{taptocontinue: 0},
 	{GameMonetizeSDK: 0},
-	{MUERTE: 0},
 	{TIEMPO: 0},
-	{musica: 0}
+	{musica: 0},
+	{MUERTE: 0}
 ];
 
 self.InstanceType = {
