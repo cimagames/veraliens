@@ -6,6 +6,7 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Touch,
 		C3.Behaviors.solid,
 		C3.Behaviors.Flash,
+		C3.Behaviors.MoveTo,
 		C3.Behaviors.lunarray_LiteTween,
 		C3.Behaviors.Sin,
 		C3.Behaviors.scrollto,
@@ -59,18 +60,17 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.System.Cnds.OnLayoutStart,
 		C3.Plugins.Audio.Acts.SetVolume,
 		C3.Plugins.LocalStorage.Acts.CheckItemExists,
+		C3.Behaviors.MoveTo.Acts.MoveToPosition,
 		C3.Plugins.LocalStorage.Cnds.OnItemExists,
 		C3.Plugins.LocalStorage.Exps.ItemValue,
 		C3.Plugins.System.Cnds.OnLoadFinished,
 		C3.Plugins.Audio.Acts.Preload,
-		C3.Plugins.System.Exps.loadingprogress
+		C3.Behaviors.Flash.Acts.Flash,
+		C3.Plugins.Touch.Cnds.OnTapGestureObject
 	];
 };
 self.C3_JsPropNameTable = [
 	{Sprite: 0},
-	{fon: 0},
-	{fongor: 0},
-	{Sprite2: 0},
 	{TiledBackground: 0},
 	{gravity: 0},
 	{Player: 0},
@@ -81,6 +81,7 @@ self.C3_JsPropNameTable = [
 	{block: 0},
 	{block2: 0},
 	{Flash: 0},
+	{MoverA: 0},
 	{Sprite3: 0},
 	{LiteTween: 0},
 	{Sprite4: 0},
@@ -115,7 +116,6 @@ self.C3_JsPropNameTable = [
 	{PlusHP: 0},
 	{Sprite13: 0},
 	{Sprite14: 0},
-	{Sprite15: 0},
 	{Sprite23: 0},
 	{Sprite16: 0},
 	{Sprite17: 0},
@@ -126,6 +126,10 @@ self.C3_JsPropNameTable = [
 	{Audio: 0},
 	{Browser: 0},
 	{ArmazenamentoLocal: 0},
+	{area: 0},
+	{Parpadeo: 0},
+	{continue: 0},
+	{SinTítulo: 0},
 	{BestScore: 0},
 	{BestMin: 0},
 	{BestSec: 0},
@@ -134,14 +138,12 @@ self.C3_JsPropNameTable = [
 	{HP: 0},
 	{Score: 0},
 	{speed: 0},
+	{fon: 0},
 	{sound: 0}
 ];
 
 self.InstanceType = {
 	Sprite: class extends self.ISpriteInstance {},
-	fon: class extends self.ITiledBackgroundInstance {},
-	fongor: class extends self.ITiledBackgroundInstance {},
-	Sprite2: class extends self.ISpriteInstance {},
 	TiledBackground: class extends self.ITiledBackgroundInstance {},
 	Player: class extends self.ISpriteInstance {},
 	Touch: class extends self.IInstance {},
@@ -176,7 +178,6 @@ self.InstanceType = {
 	PlusHP: class extends self.ISpriteInstance {},
 	Sprite13: class extends self.ISpriteInstance {},
 	Sprite14: class extends self.ISpriteInstance {},
-	Sprite15: class extends self.ISpriteInstance {},
 	Sprite23: class extends self.ISpriteInstance {},
 	Sprite16: class extends self.ISpriteInstance {},
 	Sprite17: class extends self.ISpriteInstance {},
@@ -186,5 +187,8 @@ self.InstanceType = {
 	effect_black_out: class extends self.ISpriteInstance {},
 	Audio: class extends self.IInstance {},
 	Browser: class extends self.IInstance {},
-	ArmazenamentoLocal: class extends self.IInstance {}
+	ArmazenamentoLocal: class extends self.IInstance {},
+	area: class extends self.ISpriteInstance {},
+	continue: class extends self.ISpriteInstance {},
+	SinTítulo: class extends self.ISpriteInstance {}
 }
