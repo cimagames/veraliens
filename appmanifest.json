@@ -1,7 +1,7 @@
 {
-	"name": "WAY OF THE SAMURAI",
-	"short_name": "WAY OF THE SAMURAI",
-	"description": "1.1.0.0",
+	"name": "BirdinDanger",
+	"short_name": "BirdinDanger",
+	"description": "",
 	"start_url": "index.html",
 	"display": "fullscreen",
 	"orientation": "portrait",
