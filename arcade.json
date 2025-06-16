@@ -1,0 +1,34 @@
+{
+	"name": "Tile Matcher Example",
+	"version": "1.0.0.0",
+	"description": "",
+	"id": "",
+	"unique-id": "wrr6kj98k6o",
+	"viewport-width": 480,
+	"viewport-height": 854,
+	"author": "",
+	"email": "",
+	"website": "",
+	"orientations": "landscape",
+	"c2version": "244",
+	"c3version": "r440.2",
+	"ife": false,
+	"used-plugins": [
+		"Sprite",
+		"Arr",
+		"Keyboard",
+		"AJAX",
+		"Touch",
+		"Text",
+		"TiledBg",
+		"Audio",
+		"Particles"
+	],
+	"used-behaviors": [
+		"Sin",
+		"Tween",
+		"Rotate",
+		"Fade",
+		"Flash"
+	]
+}
